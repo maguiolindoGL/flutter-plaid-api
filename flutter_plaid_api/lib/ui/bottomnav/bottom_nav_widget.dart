@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plaid_flutter/plaid_flutter.dart';
-import 'package:plaid_poc/ui/bottomnav/bloc/bloc_widget.dart';
-import 'package:plaid_poc/ui/bottomnav/bottom_nav_bloc.dart';
-import 'package:plaid_poc/ui/bottomnav/bottom_nav_bloc_event.dart';
-import 'package:plaid_poc/ui/bottomnav/bottom_nav_bloc_state.dart';
-import 'package:plaid_poc/ui/bottomnav/riverpod/riverpod_widget.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plaid_poc/ui/bottomnav/bloc/bloc_transactions_widget.dart';
+import 'package:plaid_poc/ui/bottomnav/bloc/bottom_nav_bloc.dart';
+import 'package:plaid_poc/ui/bottomnav/getx/getx_transactions_widget.dart';
+import 'package:plaid_poc/ui/bottomnav/riverpod/riverpod_transactions_widget.dart';
+
+import 'bloc/bottom_nav_bloc_event.dart';
+import 'getx/bottom_nav_controller.dart';
 
 class BottomNavWidget extends StatefulWidget {
   const BottomNavWidget({super.key});
@@ -16,8 +17,8 @@ class BottomNavWidget extends StatefulWidget {
 
 class _BottomNavWidgetState extends State<BottomNavWidget> {
   int _selectedIndex = 0;
-  late BottomNavBloc _bottomNavBloc;
 
+  late BottomNavBloc _bottomNavBloc;
   late List<Widget> _widgetOptions;
 
   @override
@@ -30,51 +31,42 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     );
 
     _widgetOptions = <Widget>[
-      BLoCWidget(bottomNavBloc: _bottomNavBloc),
-      const RiverpodWidget(),
+      BLoCTransactionsWidget(bottomNavBloc: _bottomNavBloc),
+      const ProviderScope(
+        child: RiverpodTransactionsWidget(),
+      ),
+      const GetXTransactionsWidget()
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<BottomNavBloc>(
-      create: (context) => _bottomNavBloc,
-      child: BlocListener<BottomNavBloc, BottomNavBlocState>(
-        listener: (context, state) {
-          final sideEffect = state.sideEffect;
-
-          if (sideEffect is StartPlaidLogin) {
-            // LinkConfiguration configuration = LinkTokenConfiguration(
-            //   token: sideEffect.linkToken,
-            // );
-            //
-            // PlaidLink.open(configuration: configuration);
-          }
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Plaid Example'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Plaid Example'),
+      ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'BLoC',
           ),
-          body: Center(
-            child: _widgetOptions.elementAt(_selectedIndex),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Riverpod',
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'BLoC',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.business),
-                label: 'Riverpod',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.amber[800],
-            onTap: _onItemTapped,
+          BottomNavigationBarItem(
+            icon: Icon(Icons.access_alarm),
+            label: 'GetX',
           ),
-        ),
-      )
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
     );
   }
 

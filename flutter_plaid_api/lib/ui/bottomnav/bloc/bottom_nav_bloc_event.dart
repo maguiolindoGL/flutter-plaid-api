@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 
-class PlaidBlocEvent extends Equatable {
+class BottomNavBlocEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class InitScreenEvent extends PlaidBlocEvent {
+class InitScreenEvent extends BottomNavBlocEvent {
 
   InitScreenEvent();
 

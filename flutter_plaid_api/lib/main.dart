@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:plaid_poc/di/app_binding.dart';
 import 'package:plaid_poc/ui/bottomnav/bottom_nav_widget.dart';
 
 void main() {
@@ -10,7 +12,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
+      initialBinding: AppBinding(),
       home: const BottomNavWidget(),
     );
   }

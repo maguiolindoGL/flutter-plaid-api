@@ -1,26 +1,27 @@
 import 'package:equatable/equatable.dart';
+import 'package:plaid_poc/model/transaction_ui_model.dart';
 
 class BottomNavBlocState extends Equatable {
   const BottomNavBlocState({
-    List<String>? accounts,
+    List<TransactionUiModel>? transactions,
     this.sideEffect,
-  }) : accounts = accounts ?? const [];
+  }) : transactions = transactions ?? const [];
 
-  final List<String> accounts;
+  final List<TransactionUiModel> transactions;
   final BottomNavBlocSideEffect? sideEffect;
 
   @override
   List<Object?> get props => [
-        accounts,
+        transactions,
         sideEffect,
       ];
 
   BottomNavBlocState copyWith({
-    List<String>? accounts,
+    List<TransactionUiModel>? transactions,
     BottomNavBlocSideEffect? sideEffect,
   }) {
     return BottomNavBlocState(
-      accounts: accounts ?? this.accounts,
+      transactions: transactions,
       sideEffect: sideEffect,
     );
   }
